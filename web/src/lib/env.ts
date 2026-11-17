@@ -8,8 +8,8 @@ export interface Network {
   /** Short name for the network switcher. */
   label: string;
   chain: Chain;
-  /** Your Checkout on this network, if you deployed one. */
-  checkout?: Address;
+  /** Your Leash deployment on this network, if you deployed one. */
+  leash?: Address;
   /** Only scan events from this block onward on the Activity page. */
   deployBlock?: bigint;
   /** Explorer links only make sense on the real testnet. */
@@ -25,7 +25,7 @@ const all: Record<NetworkKey, Network> = {
     key: "aevum",
     label: "Aevum testnet",
     chain: aevumTestnet,
-    checkout: address(process.env.NEXT_PUBLIC_CHECKOUT_AEVUM),
+    leash: address(process.env.NEXT_PUBLIC_LEASH_AEVUM),
     deployBlock: block(process.env.NEXT_PUBLIC_DEPLOY_BLOCK_AEVUM),
     hasExplorer: true,
   },
@@ -33,7 +33,7 @@ const all: Record<NetworkKey, Network> = {
     key: "fork",
     label: "Local fork",
     chain: aevumFork,
-    checkout: address(process.env.NEXT_PUBLIC_CHECKOUT_FORK),
+    leash: address(process.env.NEXT_PUBLIC_LEASH_FORK),
     deployBlock: block(process.env.NEXT_PUBLIC_DEPLOY_BLOCK_FORK),
     hasExplorer: false,
   },
@@ -41,7 +41,7 @@ const all: Record<NetworkKey, Network> = {
     key: "local",
     label: "Local anvil",
     chain: localAnvil,
-    checkout: address(process.env.NEXT_PUBLIC_CHECKOUT_LOCAL),
+    leash: address(process.env.NEXT_PUBLIC_LEASH_LOCAL),
     deployBlock: undefined,
     hasExplorer: false,
   },
@@ -72,4 +72,4 @@ export function networkByKey(key: string | null | undefined): Network | undefine
 export const walletConnectProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || undefined;
 
 /** Where the "Source" links and the clone command on the Docs page point. Override it for a fork or a preview deploy. */
-export const repoUrl = (process.env.NEXT_PUBLIC_REPO_URL?.trim() || "https://github.com/qday-io/aevum-starter-kit").replace(/\.git$|\/+$/g, "");
+export const repoUrl = (process.env.NEXT_PUBLIC_REPO_URL?.trim() || "https://github.com/vincentofweb3/leash").replace(/\.git$|\/+$/g, "");

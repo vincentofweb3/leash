@@ -1,14 +1,14 @@
 "use client";
 
-import { checkoutAbi, getLogsChunked, txUrl } from "@aevum-kit/aevum";
+import { getLogsChunked, txUrl } from "@aevum-kit/aevum";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
 import { formatUnits, getAbiItem, type PublicClient } from "viem";
-import { useAccount, usePublicClient } from "wagmi";
-import { useToken } from "@/components/useToken";
+import { usePublicClient } from "wagmi";
+import { leashAbi } from "@leash/kit";
 import { useNetwork } from "@/lib/network";
-import { orderLabel, short } from "@/lib/order";
+import { short } from "@/lib/format";
 
 const WINDOWS = [
   { blocks: 1_000n, label: "Last 1k blocks" },
@@ -19,138 +19,104 @@ const WINDOWS = [
 export default function ActivityPage() {
   const { net } = useNetwork();
   const appChain = net.chain;
-  const checkoutAddress = net.checkout;
+  const leash = net.leash;
   const deployBlock = net.deployBlock;
-  const hasExplorer = net.hasExplorer;
   const client = usePublicClient({ chainId: appChain.id }) as PublicClient | undefined;
-  const { address } = useAccount();
-  const token = useToken();
   const [windowSize, setWindowSize] = useState(5_000n);
-  const [onlyMine, setOnlyMine] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const logs = useQuery({
-    queryKey: ["paid-logs", appChain.id, checkoutAddress, windowSize.toString(), onlyMine ? address : null],
-    enabled: Boolean(client && checkoutAddress),
+    queryKey: ["spent-logs", appChain.id, leash, windowSize.toString()],
+    enabled: Boolean(client && leash),
     queryFn: async () => {
       const head = await client!.getBlockNumber();
       let from = head > windowSize ? head - windowSize + 1n : 0n;
       if (deployBlock !== undefined && deployBlock > from) from = deployBlock;
       setProgress(0);
       const result = await getLogsChunked(client!, {
-        address: checkoutAddress!,
-        event: getAbiItem({ abi: checkoutAbi, name: "Paid" }),
-        args: onlyMine && address ? { payer: address } : undefined,
+        address: leash!,
+        event: getAbiItem({ abi: leashAbi, name: "Spent" }),
         fromBlock: from,
         toBlock: head,
-        onProgress: (done, total) => setProgress(total ? Number((done * 100n) / total) : 100),
+        onProgress: (done, total) => setProgress(Number((done * 100n) / (total || 1n))),
       });
-      return { from, head, items: [...result].reverse() };
+      return result;
     },
   });
-
-  const total = logs.data?.items.reduce((sum, l) => sum + (l.args.amount ?? 0n), 0n) ?? 0n;
 
   return (
     <main className="shell">
       <div className="page-head">
         <div>
-          <p className="eyebrow">Example · reading events</p>
-          <h1>Payment activity</h1>
+          <p className="eyebrow">Audit trail</p>
+          <h1>Every spend, onchain.</h1>
           <p className="lede">
-            Every <code>Paid</code> event from your Checkout. Aevum serves at most 1,000 blocks per <code>eth_getLogs</code> call, so the kit
-            reads in chunks.
+            Leash writes a typed <span className="mono">Spent</span> event for each payment. This is the whole ledger —
+            no backend, no database. Aevum returns at most 1,000 blocks per <span className="mono">eth_getLogs</span> call, so we scan in chunks.
           </p>
         </div>
-        {logs.data && (
-          <div className="score">
-            <span className="score-num">{logs.data.items.length}</span>
-            <span className="fine">
-              payments · {formatUnits(total, token.decimals)} {token.symbol}
-            </span>
-          </div>
-        )}
       </div>
 
-      {!checkoutAddress ? (
-        <div className="card empty">
-          No Checkout configured for {net.label}. Set <code>NEXT_PUBLIC_CHECKOUT_{net.key.toUpperCase()}</code> in <code>web/.env.local</code>.
+      <div className="row" style={{ gap: 16, alignItems: "center" }}>
+        <div className="modes" role="radiogroup" aria-label="Blocks to scan">
+          {WINDOWS.map((w) => (
+            <button
+              key={w.blocks.toString()}
+              type="button"
+              role="radio"
+              aria-checked={windowSize === w.blocks}
+              className={`mode ${windowSize === w.blocks ? "active" : ""}`}
+              onClick={() => setWindowSize(w.blocks)}
+            >
+              <span className="mode-top"><span className="mode-desc">{w.label}</span></span>
+            </button>
+          ))}
         </div>
-      ) : (
-        <section className="card flush">
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", padding: "16px 20px", borderBottom: "1px solid var(--line)" }}>
-            {WINDOWS.map((w) => (
-              <button
-                key={w.label}
-                type="button"
-                className={`btn small ${windowSize === w.blocks ? "" : "secondary"}`}
-                aria-pressed={windowSize === w.blocks}
-                onClick={() => setWindowSize(w.blocks)}
-              >
-                {w.label}
-              </button>
-            ))}
-            <label style={{ display: "inline-flex", gap: 8, alignItems: "center", marginLeft: "auto", fontSize: 14, color: "var(--text-muted)" }}>
-              <input type="checkbox" checked={onlyMine} disabled={!address} onChange={(e) => setOnlyMine(e.target.checked)} />
-              Only my payments
-            </label>
-          </div>
+        <Link className="btn ghost small" href="/new">Create a policy</Link>
+      </div>
 
-          {logs.isFetching && (
-            <div style={{ padding: "16px 20px" }} aria-live="polite">
-              <div className="progress" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-                <span style={{ width: `${progress}%` }} />
-              </div>
-              <p className="fine" style={{ marginTop: 8 }}>
-                Scanning {windowSize.toLocaleString("en-US")} blocks, 1,000 at a time… {progress}%
-              </p>
-            </div>
-          )}
+      {!leash && (
+        <div className="notice warn">
+          Leash is not configured for {net.label}. Set <code>NEXT_PUBLIC_LEASH_AEVUM</code> (or fork/local) and redeploy.
+        </div>
+      )}
 
-          {logs.error && <p className="empty">Couldn&apos;t read events: {(logs.error as Error).message}</p>}
+      {leash && logs.isLoading && (
+        <div className="card">
+          <p className="sub" style={{ marginBottom: 10 }}>Scanning blocks… {progress}%</p>
+          <div className="progress"><span style={{ width: `${progress}%` }} /></div>
+        </div>
+      )}
+      {leash && logs.error && <div className="notice bad">{(logs.error as Error).message}</div>}
 
-          {logs.data && logs.data.items.length === 0 && !logs.isFetching && (
-            <p className="empty">
-              No payments in blocks {logs.data.from.toString()}–{logs.data.head.toString()}. <Link href="/checkout">Make one</Link>.
-            </p>
-          )}
-
-          {logs.data && logs.data.items.length > 0 && (
+      {leash && logs.data && (
+        <div className="card">
+          <h2>{logs.data.length} spend{logs.data.length === 1 ? "" : "s"}</h2>
+          {logs.data.length === 0 ? (
+            <p className="fine">No spends in this window. Widen the range, or create a policy and pay it.</p>
+          ) : (
             <div className="table-wrap">
               <table className="data">
-                <thead>
-                  <tr>
-                    <th>Order</th>
-                    <th>Payer</th>
-                    <th className="right">Amount</th>
-                    <th className="right">Block</th>
-                    <th>Links</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Block</th><th>Policy</th><th>Vendor</th><th className="right">Amount</th><th>Purpose hash</th><th></th></tr></thead>
                 <tbody>
-                  {logs.data.items.map((l) => (
-                    <tr key={`${l.transactionHash}-${l.logIndex}`}>
-                      <td className="mono">{l.args.orderId ? orderLabel(l.args.orderId) : "—"}</td>
-                      <td className="mono">{short(l.args.payer ?? "")}</td>
-                      <td className="right num">
-                        {formatUnits(l.args.amount ?? 0n, token.decimals)} {token.symbol}
-                      </td>
-                      <td className="right num">{l.blockNumber?.toString()}</td>
-                      <td style={{ display: "flex", gap: 14 }}>
-                        <Link href={`/receipts/${l.args.orderId}?tx=${l.transactionHash}&chain=${appChain.id}`}>Receipt</Link>
-                        {hasExplorer && l.transactionHash && (
-                          <a href={txUrl(l.transactionHash)} target="_blank" rel="noreferrer">
-                            Tx
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                  {[...logs.data].reverse().map((l, i) => {
+                    const a = l.args as { policyId?: bigint; vendor?: string; amount?: bigint; purposeHash?: `0x${string}`; spentAfter?: bigint };
+                    return (
+                      <tr key={i}>
+                        <td className="num">{l.blockNumber?.toString()}</td>
+                        <td className="num"><Link href={`/policy/${a.policyId ?? 0}`}>#{a.policyId?.toString()}</Link></td>
+                        <td className="mono">{a.vendor ? short(a.vendor) : "—"}</td>
+                        <td className="right num">{formatUnits(a.amount ?? 0n, 6)}</td>
+                        <td className="mono">{a.purposeHash ? short(a.purposeHash, 8, 6) : "—"}</td>
+                        <td><a href={l.transactionHash ? txUrl(l.transactionHash) : "#"} target="_blank" rel="noreferrer">explorer</a></td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           )}
-        </section>
+        </div>
       )}
     </main>
   );

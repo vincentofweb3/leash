@@ -10,8 +10,8 @@ const interTight = Inter_Tight({ subsets: ["latin"], weight: ["500", "600", "700
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-jetbrains", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Aevum Starter Kit", template: "%s · Aevum Starter Kit" },
-  description: "Build and test stablecoin payments on QDay Aevum testnet.",
+  title: { default: "Leash — scoped spend allowances for AI agents", template: "%s · Leash" },
+  description: "Set a per-transaction cap, a budget and a vendor allowlist. Your agent pays in tUSD8 on QDay Aevum testnet — revoke its key anytime.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

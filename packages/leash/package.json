@@ -1,0 +1,17 @@
+{
+  "name": "@leash/kit",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Leash SDK: Aevum chain config, Leash ABI, EIP-712 SpendAuth builders, policy bundle helpers.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@aevum-kit/aevum": "workspace:*"
+  },
+  "peerDependencies": {
+    "viem": "^2.57.0"
+  }
+}

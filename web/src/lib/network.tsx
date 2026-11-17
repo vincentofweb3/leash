@@ -5,7 +5,7 @@ import { useAccount, useSwitchChain } from "wagmi";
 import { defaultNetwork, networkByChainId, networkByKey, type Network, type NetworkKey } from "./env";
 import { explain } from "./errors";
 
-const STORAGE_KEY = "aevum-kit:network";
+const STORAGE_KEY = "leash:network";
 
 interface NetworkState {
   /** The network every page reads from and sends to. */

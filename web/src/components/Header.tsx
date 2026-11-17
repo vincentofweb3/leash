@@ -9,8 +9,8 @@ import { GitHubIcon } from "./Icons";
 import { useNetwork } from "@/lib/network";
 
 const links = [
-  { href: "/", label: "Setup" },
-  { href: "/checkout", label: "Checkout" },
+  { href: "/", label: "Overview" },
+  { href: "/new", label: "New policy" },
   { href: "/activity", label: "Activity" },
   { href: "/docs", label: "Docs" },
 ];
@@ -27,7 +27,7 @@ export function Header() {
         <div className="shell">
           <Link href="/" className="brand">
             <span className="brand-mark" aria-hidden="true" />
-            <span className="brand-name">Aevum Starter Kit</span>
+            <span className="brand-name">Leash</span>
           </Link>
           <nav className="nav" aria-label="Main">
             {links.map((l) => {

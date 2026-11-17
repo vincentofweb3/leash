@@ -1,8 +1,14 @@
 # Third-party notices
 
-Aevum Starter Kit is MIT licensed (see [LICENSE](LICENSE)). It builds on the open-source projects below.
-None of their code is copied into this repository: the Solidity libraries are git submodules that keep
-their own LICENSE files, and the JavaScript packages are installed from npm.
+This project is [Leash](README.md), built on the **Aevum Starter Kit** (MIT, © 2026 PQA Labs —
+[github.com/qday-io/aevum-starter-kit](https://github.com/qday-io/aevum-starter-kit), [LICENSE](LICENSE) retained).
+The starter kit is the workspace scaffold: Foundry config (`contracts/foundry.toml`, `tools/check-shanghai.mjs`,
+`Makefile`), the `@aevum-kit/aevum` package (chain config, tUSD8 ABIs, `getLogsChunked`), the Next.js desk shell
+and theming, and the pnpm workspace layout. The Leash contract (`contracts/src/Leash.sol`), the `@leash/kit`
+SDK, the `leash` CLI, the policy desk pages and this project's docs are new work.
+
+It builds on the open-source projects below.
+The Solidity libraries are git submodules that keep their own LICENSE files, and the JavaScript packages are installed from npm.
 
 ## Solidity libraries (`contracts/lib`, git submodules)
 

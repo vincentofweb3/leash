@@ -25,18 +25,3 @@ export const eip3009Abi = parseAbi([
   "function transferWithAuthorization(address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce, uint8 v, bytes32 r, bytes32 s)",
   "function receiveWithAuthorization(address from, address to, uint256 value, uint256 validAfter, uint256 validBefore, bytes32 nonce, uint8 v, bytes32 r, bytes32 s)",
 ]);
-
-/** ABI of contracts/src/Checkout.sol. */
-export const checkoutAbi = parseAbi([
-  "function token() view returns (address)",
-  "function merchant() view returns (address)",
-  "function pay(bytes32 orderId, uint256 amount)",
-  "function payWithAuthorization(bytes32 orderId, address from, uint256 amount, uint256 validAfter, uint256 validBefore, uint8 v, bytes32 r, bytes32 s)",
-  "function authorizationNonce(bytes32 orderId) view returns (bytes32)",
-  "function isPaid(bytes32 orderId) view returns (bool)",
-  "function paymentOf(bytes32 orderId) view returns ((address payer, uint64 paidAt, uint256 amount))",
-  "event Paid(bytes32 indexed orderId, address indexed payer, uint256 amount)",
-  "error AlreadyPaid(bytes32 orderId)",
-  "error ZeroAmount()",
-  "error ZeroAddress()",
-]);

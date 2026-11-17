@@ -1,6 +1,6 @@
 /*
  * Theme. Every color and font the app uses is defined here, so rebranding = editing this block.
- * QDay brand: blue #0257FF, cyan #60F2FF, peach #FFA768.
+ * QDay ecosystem brand: blue #0257FF, cyan #60F2FF, peach #FFA768.
  */
 :root {
   --bg: #0e0f12;
@@ -130,6 +130,17 @@ dl.kv dd { margin: 0; font-family: var(--font-mono); overflow-wrap: anywhere; }
 .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 13px; color: var(--text-2); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
 .dot.bad { background: var(--bad); }
+
+label.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-2); margin-bottom: 14px; }
+label.field > span { font-weight: 600; }
+.input, textarea.input {
+  font: inherit; font-size: 14px; color: var(--text); box-sizing: border-box;
+  background: var(--bg); border: 1px solid var(--line-strong); border-radius: var(--radius-sm);
+  padding: 10px 12px; min-height: 44px; width: 100%; font-family: var(--font-body);
+}
+textarea.input { resize: vertical; }
+.input.mono, textarea.input.mono { font-family: var(--font-mono); font-size: 13px; }
+.input.num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
 
 input.field {
   font: inherit; font-family: var(--font-mono); font-size: 14px; color: var(--text);

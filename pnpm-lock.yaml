@@ -12,11 +12,36 @@ importers:
 
   .: {}
 
+  cli:
+    dependencies:
+      '@aevum-kit/aevum':
+        specifier: workspace:*
+        version: link:../packages/aevum
+      '@leash/kit':
+        specifier: workspace:*
+        version: link:../packages/leash
+      viem:
+        specifier: 2.57.12
+        version: 2.57.12(bufferutil@4.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.7)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.0
+        version: 22.20.5
+      tsx:
+        specifier: 4.23.15
+        version: 4.23.15
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   examples:
     dependencies:
       '@aevum-kit/aevum':
         specifier: workspace:*
         version: link:../packages/aevum
+      '@leash/kit':
+        specifier: workspace:*
+        version: link:../packages/leash
       viem:
         specifier: 2.57.12
         version: 2.57.12(bufferutil@4.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.7)
@@ -37,11 +62,23 @@ importers:
         specifier: ^2.57.0
         version: 2.57.12(bufferutil@4.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.7)
 
+  packages/leash:
+    dependencies:
+      '@aevum-kit/aevum':
+        specifier: workspace:*
+        version: link:../aevum
+      viem:
+        specifier: ^2.57.0
+        version: 2.57.12(bufferutil@4.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.7)
+
   web:
     dependencies:
       '@aevum-kit/aevum':
         specifier: workspace:*
         version: link:../packages/aevum
+      '@leash/kit':
+        specifier: workspace:*
+        version: link:../packages/leash
       '@rainbow-me/rainbowkit':
         specifier: 2.2.11
         version: 2.2.11(@tanstack/react-query@5.90.2(react@19.2.0))(@types/react@19.3.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.9.3)(viem@2.57.12(bufferutil@4.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.7))(wagmi@2.19.5(@tanstack/query-core@5.90.2)(@tanstack/react-query@5.90.2(react@19.2.0))(@types/react@19.3.0)(bufferutil@4.2.0)(react@19.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.57.12(bufferutil@4.2.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@4.6.7))(zod@4.6.7))
@@ -2994,7 +3031,7 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.1
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
@@ -3693,6 +3730,11 @@ snapshots:
       typescript: 5.9.3
       zod: 4.6.7
 
+  abitype@1.3.0(typescript@5.9.3)(zod@3.22.4):
+    optionalDependencies:
+      typescript: 5.9.3
+      zod: 3.22.4
+
   abitype@1.3.0(typescript@5.9.3)(zod@4.6.7):
     optionalDependencies:
       typescript: 5.9.3
@@ -4262,7 +4304,7 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@3.22.4)
+      abitype: 1.3.0(typescript@5.9.3)(zod@3.22.4)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.9.3
@@ -4277,7 +4319,7 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@4.6.7)
+      abitype: 1.3.0(typescript@5.9.3)(zod@4.6.7)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.9.3
@@ -4287,11 +4329,11 @@ snapshots:
   ox@0.6.7(typescript@5.9.3)(zod@4.6.7):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
-      '@noble/curves': 1.8.1
-      '@noble/hashes': 1.7.1
-      '@scure/bip32': 1.6.2
-      '@scure/bip39': 1.5.4
-      abitype: 1.0.8(typescript@5.9.3)(zod@4.6.7)
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.3.0(typescript@5.9.3)(zod@4.6.7)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.9.3

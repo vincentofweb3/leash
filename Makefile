@@ -45,13 +45,13 @@ anvil: ## Empty local chain (31337) with Aevum's EVM rules
 fork: ## Local copy of Aevum testnet on 127.0.0.1:8555 (chain 440050)
 	anvil --fork-url $(AEVUM_RPC) --hardfork shanghai --chain-id $(FORK_CHAIN) --port $(FORK_PORT)
 
-deploy-local: ## Deploy MockUSD8 + Checkout to `make anvil`
+deploy-local: ## Deploy MockUSD8 + Leash to `make anvil`
 	cd contracts && forge script script/Deploy.s.sol --rpc-url $(LOCAL_RPC) --broadcast --unlocked --sender $(ANVIL_0)
 
 # Deploy from a random address nobody has the key for (anvil impersonates it), not from a public
 # anvil account. Otherwise the fork's contract addresses could be claimed on the real testnet by
 # anyone holding that public key.
-deploy-fork: ## Deploy Checkout (real tUSD8) to `make fork`
+deploy-fork: ## Deploy Leash (real tUSD8) to `make fork`
 	@test "$$(cast chain-id --rpc-url $(FORK_RPC))" = "$(FORK_CHAIN)" || (echo "This only works on 'make fork'." && exit 1)
 	@DEPLOYER=$$(cast to-check-sum-address 0x$$(openssl rand -hex 20)); \
 	  cast rpc anvil_setBalance $$DEPLOYER 0x8ac7230489e80000 --rpc-url $(FORK_RPC) > /dev/null && \
@@ -59,13 +59,13 @@ deploy-fork: ## Deploy Checkout (real tUSD8) to `make fork`
 	  echo "Deploying from throwaway address $$DEPLOYER (no private key exists for it)" && \
 	  cd contracts && MERCHANT=$${MERCHANT:-$(ANVIL_0)} forge script script/Deploy.s.sol --rpc-url $(FORK_RPC) --broadcast --unlocked --sender $$DEPLOYER
 
-deploy-aevum: ## Deploy Checkout to Aevum testnet. Needs ACCOUNT=<keystore name> (see README)
+deploy-aevum: ## Deploy Leash to Aevum testnet. Needs ACCOUNT=<keystore name> (see README)
 	@test -n "$(ACCOUNT)" || (echo "Set ACCOUNT=<name>. Create one with: cast wallet import <name> --interactive" && exit 1)
 	cd contracts && forge script script/Deploy.s.sol --rpc-url $(AEVUM_RPC) --broadcast --legacy --account $(ACCOUNT)
 
-mint: ## `make anvil` only: mint AMOUNT MockUSD8 to TO. Needs CHECKOUT=<address>
-	@test -n "$(TO)" -a -n "$(CHECKOUT)" || (echo "Usage: make mint TO=0x... CHECKOUT=0x... [AMOUNT=100]" && exit 1)
-	cast send $$(cast call $(CHECKOUT) "token()(address)" --rpc-url $(LOCAL_RPC)) "mint(address,uint256)" $(TO) $$(cast parse-units $(AMOUNT) 6) \
+mint: ## `make anvil` only: mint AMOUNT MockUSD8 to TO. Needs LEASH=<address>
+	@test -n "$(TO)" -a -n "$(LEASH)" || (echo "Usage: make mint TO=0x... LEASH=0x... [AMOUNT=100]" && exit 1)
+	cast send $$(cast call $(LEASH) "token()(address)" --rpc-url $(LOCAL_RPC)) "mint(address,uint256)" $(TO) $$(cast parse-units $(AMOUNT) 6) \
 	  --rpc-url $(LOCAL_RPC) --unlocked --from $(ANVIL_0) > /dev/null
 	@echo "Minted $(AMOUNT) to $(TO)."
 

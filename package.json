@@ -1,8 +1,8 @@
 {
-  "name": "aevum-starter-kit",
+  "name": "leash",
   "version": "0.1.0",
   "private": true,
-  "description": "Starter kit for building on QDay Aevum testnet: Foundry contracts, a Next.js app and TypeScript examples.",
+  "description": "Leash \u2014 scoped, onchain spend allowances for AI agents. Built on the Aevum testnet (QDay) with tUSD8.",
   "license": "MIT",
   "packageManager": "pnpm@10.8.1",
   "engines": {

@@ -11,16 +11,41 @@ export function explain(error: unknown): string {
     const revert = error.walk((e) => e instanceof ContractFunctionRevertedError);
     if (revert instanceof ContractFunctionRevertedError) {
       const name = revert.data?.errorName;
-      if (name === "AlreadyPaid") return "This order is already paid. Start a new order.";
-      if (name === "ZeroAmount") return "The amount must be more than zero.";
+      switch (name) {
+        case "Revoked":
+          return "This policy was revoked. Ask the buyer for a new policy before the agent can pay again.";
+        case "PolicyExpired":
+          return "This policy expired. The buyer can extend it in the desk.";
+        case "SpendExpired":
+          return "The signed authorization expired before it was submitted. Sign again.";
+        case "ExceedsPerTxCap":
+          return "That spend is above the per-transaction cap. Raise the cap in the desk or split the payment.";
+        case "ExceedsBudget":
+          return "That spend exceeds the remaining budget. Raise the budget in the desk.";
+        case "ExceedsDailyCap":
+          return "That spend would exceed the daily cap. Wait for the next day or raise the cap.";
+        case "VendorNotAllowed":
+          return "The vendor is not on this policy's allowlist. Add it in the desk first.";
+        case "NonceUsed":
+          return "This authorization was already used. Go back and sign again.";
+        case "BadSignature":
+          return "The signature doesn't recover to this policy's agent key. Sign with the right key.";
+        case "AllowanceTooSmall":
+          return "Your tUSD8 allowance to Leash is lower than the spend. Approve more first.";
+        case "ZeroAmount":
+          return "The amount must be more than zero.";
+        case "UnknownPolicy":
+          return "That policy does not exist on this network.";
+        case "NotBuyer":
+          return "Only the buyer who created the policy can do that.";
+        default:
+          break;
+      }
       const reason = revert.reason ?? "";
-      if (/invalid signature/i.test(reason)) return "The signature doesn't match this order or amount. Sign again.";
-      if (/expired/i.test(reason)) return "Your signature expired before it was submitted. Nothing was charged. Sign again.";
-      if (/exceeds balance|insufficient/i.test(reason)) return "Not enough tUSD8 in your wallet for this order.";
-      if (/allowance/i.test(reason)) return "The approval is lower than the order total. Approve again.";
       if (reason) return reason;
+      if (name) return `The transaction reverted: ${name}`;
     }
-    if (/insufficient funds/i.test(error.message)) return "Not enough tQDAY for gas. Get some from the faucet, or use Gasless mode.";
+    if (/insufficient funds/i.test(error.message)) return "Not enough tQDAY for gas. Get some from the faucet.";
     return error.shortMessage;
   }
   return error.message;

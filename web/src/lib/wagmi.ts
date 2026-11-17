@@ -9,7 +9,7 @@ import type { Chain } from "viem";
 import { createConfig, http, type Transport } from "wagmi";
 import { networks, walletConnectProjectId } from "./env";
 
-const appName = "Aevum Starter Kit";
+const appName = "Leash";
 
 // With a WalletConnect project id: extension wallets + QR for mobile wallets.
 // Without one: any injected browser wallet (MetaMask, Rabby, …) still works.

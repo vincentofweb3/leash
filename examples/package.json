@@ -1,17 +1,18 @@
 {
-  "name": "examples",
+  "name": "@leash/examples",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "type": "module",
   "scripts": {
+    "pay": "tsx --env-file-if-exists=.env src/pay.ts",
+    "read-spends": "tsx --env-file-if-exists=.env src/read-spends.ts",
     "check-setup": "tsx --env-file-if-exists=.env src/check-setup.ts",
-    "pay-gasless": "tsx --env-file-if-exists=.env src/pay-gasless.ts",
-    "read-payments": "tsx --env-file-if-exists=.env src/read-payments.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@aevum-kit/aevum": "workspace:*",
+    "@leash/kit": "workspace:*",
     "viem": "2.57.12"
   },
   "devDependencies": {
