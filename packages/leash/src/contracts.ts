@@ -4,10 +4,10 @@ import { aevumTestnet, TUSD8_ADDRESS } from "@aevum-kit/aevum";
 export { aevumTestnet, aevumFork, localAnvil, TUSD8_ADDRESS, TUSD8_DECIMALS } from "@aevum-kit/aevum";
 
 /** Deployed Leash on Aevum testnet (chain 44005). Also the address the web app and CLI default to. */
-export const LEASH_ADDRESS: Address = "0x0000000000000000000000000000000000000000";
+export const LEASH_ADDRESS: Address = "0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f";
 
-/** Fill in once the testnet deployment lands. Kept in one place so the app, CLI and docs agree. */
-export const LEASH_DEPLOY_BLOCK = 0n;
+/** Block the testnet Leash was deployed at. Kept in one place so the app, CLI and docs agree. */
+export const LEASH_DEPLOY_BLOCK = 3440063n;
 
 export const leashAbi = parseAbi([
   "function token() view returns (address)",
