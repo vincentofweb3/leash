@@ -15,11 +15,12 @@ Built on **QDay Aevum testnet** (chain `44005`) with **tUSD8** (6 decimals), for
 | Item | Value |
 | --- | --- |
 | Public repo | https://github.com/vincentofweb3/leash |
-| Live app | _(demo URL — see submission)_ |
-| Aevum testnet contract | _fill after deploy: `docs/VERIFICATION.md`_ |
-| Testnet txs | _approve, createPolicy, spend, revoke hashes — see `docs/VERIFICATION.md`_ |
-| Contract tests | `49 passed, 0 failed, 0 skipped` (unit) + fork tests vs real tUSD8 |
+| Live app | https://leash-kohl.vercel.app |
+| Aevum testnet contract | [`0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f`](https://explorer-test.qday.info/address/0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f) (block 3440063) |
+| Testnet txs | [deploy](https://explorer-test.qday.info/tx/0xff4a4ca749f140de20b2cb29acebcf3f5b5028abc9257f48c79456b02c5d2c8b) · [spend 0.5](https://explorer-test.qday.info/tx/0x61a63983290fea87134c012fc8aeece611b2b7d79453a8ed101c9c621d4aa5fe) · [revoke](https://explorer-test.qday.info/tx/0x1789dd88e5f010575be5df6ed494d377777419148bfaed0a0eb8d5cd1f4b0df0) — full set in `docs/VERIFICATION.md` |
+| Contract tests | `47 passed, 0 failed` (unit) + `2 passed` fork tests vs real tUSD8 |
 | Fork E2E | full loop verified on a local fork (deal → approve → create → pay → revoke) |
+| Live E2E | approve → createPolicy → agent spend → revoke → CLI fail-closed, all on chain 44005 |
 
 Screenshots in `public/screenshots/` (desk, policy, receipt, activity).
 

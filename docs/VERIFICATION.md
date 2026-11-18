@@ -30,26 +30,37 @@ All steps executed 2026-11-17 on `http://127.0.0.1:8555`:
 7. Buyer `revoke(0)` → tx `0x7255c9f398f9a4b90ecda92a78b532dcb0f7660fec59f32552f64d72f87dd332` (PolicyRevoked).
 8. `leash pay` after revocation → **fails closed**: `leash: policy is revoked — the buyer killed this session key. Nothing was sent.`
 
-## Live Aevum testnet (chain 44005) — PENDING
+## Live Aevum testnet (chain 44005) — DONE 2026-11-17
 
-Waiting on faucet funds (Discord `/faucet 0xBdfA76A871Fba289914f9e40a545BBceb30150C7`, or faucet.qday.info).
-To be filled:
+Deployer wallet (funded via faucet + user forward): `0xBdfA76A871Fba289914f9e40a545BBceb30150C7`.
+Agent session key: `0xDB2eBD2108f1488f37723920E753D17A47907a91` (funded 0.1 tQDAY at block 3440098,
+tx `0xfdd72623c02588e6bb3e7eda4e5b019e8a990aafaeb65119c76b0eff89022e6c`).
+Vendor (payee): `0x806d78417495c71e4748946C6f3e0a347b068df3`.
 
 | Check | Value |
 | --- | --- |
-| Deployer | 0xBdfA76A871Fba289914f9e40a545BBceb30150C7 |
-| Leash address | `[fill]` |
-| Deploy tx | `[fill]` |
-| Deploy block | `[fill]` |
-| approve (budget) tx | `[fill]` |
-| createPolicy tx | `[fill]` |
-| First spend (`Spent`) tx | `[fill]` |
-| revoke tx | `[fill]` |
-| Sample receipt screenshot | `public/screenshots/proof-testnet.png` |
+| Leash address | `0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f` |
+| Deploy tx | `0xff4a4ca749f140de20b2cb29acebcf3f5b5028abc9257f48c79456b02c5d2c8b` (block 3440063, status 1) |
+| approve(Leash, 1 tUSD8) tx | `0x71ddad5c508944fd54959c8fe75bce56603adb838e7bf1d4acf3fff9de0d455b` (block 3478976) |
+| createPolicy(policyId 0) tx | `0xd967a5c3e1d253e469a2a5eee9cb867c4dc4612d3181ae806cce467b181a06ea` (block 3478986) |
+| First spend — 0.5 tUSD8 (policy 0) | `0x61a63983290fea87134c012fc8aeece611b2b7d79453a8ed101c9c621d4aa5fe` (block 3479008) |
+| createPolicy(policyId 1, kill-switch test) tx | `0x1d686144e13c735ee23b1fa9cab79eb26050b8ec9a3a1e9c3db9a48209026dae` (block 3479050) |
+| revoke(policyId 1) tx | `0x1789dd88e5f010575be5df6ed494d377777419148bfaed0a0eb8d5cd1f4b0df0` (block 3479060) |
+| CLI pay on revoked policy | fails closed: `leash: policy is revoked — the buyer killed this session key. Nothing was sent.` |
+
+Explorer: [Leash contract](https://explorer-test.qday.info/address/0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f) ·
+[spend](https://explorer-test.qday.info/tx/0x61a63983290fea87134c012fc8aeece611b2b7d79453a8ed101c9c621d4aa5fe) ·
+[receipt verifier](https://leash-kohl.vercel.app/receipts/0x61a63983290fea87134c012fc8aeece611b2b7d79453a8ed101c9c621d4aa5fe)
+(renders the Spent event straight from the receipt).
+
+Policy 0 is intentionally **active** (0.5 tUSD8 remaining budget) for the demo.
+Policy 1 was created solely to prove the live kill switch.
 
 Deploy command used:
 
 ```bash
 forge script script/Deploy.s.sol --rpc-url https://rpc-test.qday.info \
-  --broadcast --legacy --private-key $(cat ~/aevum-deployer.key)
+  --broadcast --legacy --private-key <testnet deployer key>
 ```
+
+Every transaction above can be reproduced read-only with `cast receipt <hash> --rpc-url https://rpc-test.qday.info`.
