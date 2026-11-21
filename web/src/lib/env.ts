@@ -73,3 +73,6 @@ export const walletConnectProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID || u
 
 /** Where the "Source" links and the clone command on the Docs page point. Override it for a fork or a preview deploy. */
 export const repoUrl = (process.env.NEXT_PUBLIC_REPO_URL?.trim() || "https://github.com/vincentofweb3/leash").replace(/\.git$|\/+$/g, "");
+
+/** Canonical URL of this deployment — used for metadata, the sitemap and absolute links. */
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://leash-kohl.vercel.app").replace(/\/+$/g, "");

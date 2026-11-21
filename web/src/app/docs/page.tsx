@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { TUSD8_ADDRESS, links } from "@aevum-kit/aevum";
+import { CodeBlock } from "@/components/CodeBlock";
 import { GitHubIcon } from "@/components/Icons";
 import { LEASH_ADDRESS } from "@leash/kit";
 import { isAddress } from "viem";
 import { repoUrl } from "@/lib/env";
 
-export const metadata: Metadata = { title: "Docs" };
+export const metadata: Metadata = {
+  title: "Docs",
+  description:
+    "How Leash works end to end: the contract API, the EIP-712 SpendAuth schema, the CLI, security model, Aevum specifics and limitations.",
+};
 
 const HACKATHON_URL = "https://dorahacks.io/hackathon/qday/detail";
 const DISCORD_URL = "https://discord.gg/bYPhjmrSfK";
@@ -26,11 +31,7 @@ const sections = [
 ];
 
 function Code({ children }: { children: string }) {
-  return (
-    <pre className="code">
-      <code>{children.trim()}</code>
-    </pre>
-  );
+  return <CodeBlock code={children} />;
 }
 
 export default function DocsPage() {
@@ -49,6 +50,12 @@ export default function DocsPage() {
           <GitHubIcon />
           View the code on GitHub
         </a>
+      </div>
+
+      <div className="docs-quick">
+        <a href="#quickstart"><strong>Quickstart</strong><span>Run the desk and CLI locally in five minutes.</span></a>
+        <a href="#spendauth"><strong>SpendAuth schema</strong><span>Exactly what the agent signs, field by field.</span></a>
+        <a href="#security"><strong>Security model</strong><span>No custody, no admin, named failure modes.</span></a>
       </div>
 
       <div className="docs">
