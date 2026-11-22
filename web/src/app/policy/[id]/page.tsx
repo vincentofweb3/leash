@@ -152,6 +152,10 @@ export default async function PolicyPage({ params }: { params: Promise<{ id: str
             <dt>Expiry</dt>
             <dd>{formatExpiry(p.expiry)}</dd>
           </dl>
+          <p className="fine" style={{ marginTop: 14 }}>
+            Blast radius from here: at most <strong>{tokenAmount(remaining)} tUSD8</strong>, in payments no larger than{" "}
+            {tokenAmount(p.perTxCap)} tUSD8 each.
+          </p>
         </div>
 
         <div className="card">
