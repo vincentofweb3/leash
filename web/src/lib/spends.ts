@@ -69,10 +69,11 @@ function parseSpent(log: ExplorerLog): SpendEvent | null {
   if (!tx) return null;
   const data = log.data.startsWith("0x") ? log.data.slice(2) : log.data;
   const word = (i: number) => data.slice(i * 64, (i + 1) * 64);
+  const policyTopic = log.topics[1];
   const vendorTopic = log.topics[2];
-  if (word(0).length !== 64 || !vendorTopic) return null;
+  if (word(0).length !== 64 || !vendorTopic || !policyTopic || !/^0x[0-9a-fA-F]{64}$/.test(policyTopic)) return null;
   return {
-    policyId: BigInt(`0x${log.topics[1] ?? "0"}`),
+    policyId: BigInt(policyTopic),
     vendor: `0x${vendorTopic.slice(-40)}` as Address,
     amount: BigInt(`0x${word(0)}`),
     purposeHash: `0x${word(1)}` as Hex,
@@ -82,6 +83,25 @@ function parseSpent(log: ExplorerLog): SpendEvent | null {
     block: BigInt(log.block_number),
     logIndex: Number(log.index ?? 0),
   };
+}
+
+async function fetchExplorerPage(url: URL): Promise<ExplorerPage> {
+  let lastError: unknown = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(20_000),
+        headers: { accept: "application/json" },
+      });
+      if (!res.ok) throw new Error(`Explorer API returned ${res.status}`);
+      return (await res.json()) as ExplorerPage;
+    } catch (error) {
+      lastError = error;
+      if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+  }
+  throw lastError instanceof Error ? lastError : new Error("Explorer API unavailable");
 }
 
 async function fetchExplorerSpends(contract: Address): Promise<SpendEvent[]> {
@@ -96,16 +116,14 @@ async function fetchExplorerSpends(contract: Address): Promise<SpendEvent[]> {
         if (value !== null && value !== undefined) url.searchParams.set(key, String(value));
       }
     }
-    const res = await fetch(url, {
-      cache: "no-store",
-      signal: AbortSignal.timeout(9_000),
-      headers: { accept: "application/json" },
-    });
-    if (!res.ok) throw new Error(`Explorer API returned ${res.status}`);
-    const body = (await res.json()) as ExplorerPage;
+    const body = await fetchExplorerPage(url);
     for (const log of body.items ?? []) {
-      const parsed = parseSpent(log);
-      if (parsed) spends.push(parsed);
+      try {
+        const parsed = parseSpent(log);
+        if (parsed) spends.push(parsed);
+      } catch {
+        // A single malformed log must not discard the rest of the history.
+      }
     }
     if (!body.next_page_params) break;
     params = body.next_page_params;
@@ -176,7 +194,23 @@ async function fetchRpcFallback(contract: Address): Promise<{ spends: SpendEvent
  * no 1,000-block limit) and falls back to batched eth_getLogs over a recent window.
  */
 export async function getSpendHistory(force = false): Promise<SpendHistory> {
-  if (!force && cache && Date.now() - cache.at < CACHE_MS) return cache.data;
+  if (!force && cache) {
+    if (Date.now() - cache.at < CACHE_MS) return cache.data;
+    // Stale-while-revalidate: serve the last known history while a refresh runs.
+    const stale = cache.data;
+    if (!inFlight) {
+      inFlight = loadHistory()
+        .then((data) => {
+          cache = { at: Date.now(), data };
+          return data;
+        })
+        .catch(() => stale)
+        .finally(() => {
+          inFlight = null;
+        });
+    }
+    return stale;
+  }
   if (!force && inFlight) return inFlight;
   inFlight = loadHistory().finally(() => {
     inFlight = null;
@@ -200,8 +234,12 @@ async function loadHistory(): Promise<SpendHistory> {
     try {
       const spends = await fetchExplorerSpends(contract);
       return { spends, source: "explorer", complete: true, head, fetchedAt: Date.now() };
-    } catch {
+    } catch (error) {
       // Fall through to the RPC window below; the UI labels the result as recent-only.
+      console.warn(
+        "[spends] explorer history unavailable, using the RPC window:",
+        error instanceof Error ? error.message : error,
+      );
     }
   }
 

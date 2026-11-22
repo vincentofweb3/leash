@@ -24,6 +24,7 @@ const sections = [
   { id: "quickstart", label: "Quickstart" },
   { id: "integration", label: "Agent integration" },
   { id: "security", label: "Security model" },
+  { id: "refusals", label: "Refusals & proofs" },
   { id: "aevum", label: "Aevum specifics" },
   { id: "limitations", label: "Limitations" },
   { id: "roadmap", label: "Roadmap" },
@@ -187,11 +188,49 @@ const signature = await account.signTypedData(spendAuthTypedData(44005, LEASH, a
             </ul>
           </section>
 
+          <section id="refusals">
+            <h2>Refusals &amp; proofs</h2>
+            <p>
+              Enforcement is only credible if refusal is legible. The contract never silently no-ops: every rejected
+              spend reverts with a named error that the CLI and desk surface, and every accepted spend emits a typed
+              <code>Spent</code> event.
+            </p>
+            <div className="compare-wrap">
+              <table className="data">
+                <thead>
+                  <tr><th>Revert</th><th>What it means</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td className="mono">Revoked</td><td>The buyer killed this policy. Final.</td></tr>
+                  <tr><td className="mono">PolicyExpired</td><td>The policy&apos;s expiry passed; no further spends.</td></tr>
+                  <tr><td className="mono">SpendExpired</td><td>The signed authorization itself expired (short deadline).</td></tr>
+                  <tr><td className="mono">ExceedsPerTxCap</td><td>This single payment is above the per-transaction cap.</td></tr>
+                  <tr><td className="mono">ExceedsBudget</td><td>This payment would take total spend past the budget.</td></tr>
+                  <tr><td className="mono">ExceedsDailyCap</td><td>This payment would cross today&apos;s rolling cap.</td></tr>
+                  <tr><td className="mono">VendorNotAllowed</td><td>The recipient is not on the buyer&apos;s allowlist.</td></tr>
+                  <tr><td className="mono">NonceUsed</td><td>Replay: this signed authorization was already spent.</td></tr>
+                  <tr><td className="mono">BadSignature</td><td>The signer is not the policy&apos;s agent key.</td></tr>
+                  <tr><td className="mono">AllowanceTooSmall</td><td>The buyer&apos;s tUSD8 approval is below the amount.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              <strong>Machine-readable proof.</strong> <a href="/proof.json" target="_blank" rel="noreferrer">/proof.json</a> is a
+              live, CORS-open JSON document: contract, head, policies, exact settled total, every <code>Spent</code> event and
+              the steps to re-derive them. Each receipt page also offers a signed-by-chain <strong>Proof JSON</strong> download
+              at <code>/api/proof?tx=&lt;hash&gt;</code>.
+            </p>
+            <p className="fine">
+              Reverted transactions cannot be replayed as receipts — they leave no <code>Spent</code> event, which is exactly
+              the point. The depth of a refusal is <code>eth_call</code> away: simulate the same spend and read the revert.
+            </p>
+          </section>
+
           <section id="aevum">
             <h2>Aevum specifics</h2>
             <ul>
               <li><strong>Shanghai EVM.</strong> Compile with <code>evm_version = &quot;shanghai&quot;</code>. Cancun bytecode deploys then dies on <code>MCOPY</code>; <code>make build</code> runs a Shanghai-opcode check that fails CI.</li>
-              <li><strong>1,000-block log limit.</strong> <code>eth_getLogs</code> rejects larger ranges. The desk, CLI and examples use <code>getLogsChunked</code> from <code>@aevum-kit/aevum</code>.</li>
+              <li><strong>1,000-block log limit.</strong> <code>eth_getLogs</code> rejects larger ranges. The desk reads full history from the public explorer API and falls back to <code>getLogsChunked</code> from <code>@aevum-kit/aevum</code> on RPC.</li>
               <li><strong>No WebSocket.</strong> Poll over HTTPS; viem does this by default.</li>
               <li><strong>Legacy (type 0) transactions</strong> are what QDay&apos;s own tooling sends; the app and CLI use them too.</li>
               <li><strong>Explorer verification isn&apos;t available yet</strong> — this repo, the commit hash and the deploy block are the evidence. Link them in submissions.</li>

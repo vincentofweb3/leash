@@ -161,6 +161,7 @@ export function ReceiptClient() {
               <span className="fine">Read from the transaction receipt · no backend involved</span>
               <div className="row" style={{ gap: 8 }}>
                 <CopyButton text={`${siteUrl}/receipts/${tx}`} label="Copy link" />
+                <a className="btn ghost small" href={`/api/proof?tx=${tx}&download=1`} download>Proof JSON</a>
                 <a className="btn ghost small" href={txUrl(tx)} target="_blank" rel="noreferrer">Explorer ↗</a>
                 <button className="btn secondary small" type="button" onClick={() => window.print()}>Print</button>
               </div>

@@ -39,6 +39,7 @@ export function Footer() {
             <h3>Resources</h3>
             <ul>
               <li><a href={repoUrl} target="_blank" rel="noreferrer">GitHub repository</a></li>
+              <li><a href="/proof.json" target="_blank" rel="noreferrer">Machine-readable proof</a></li>
               <li><a href={`${links.explorer}/address/${LEASH_ADDRESS}`} target="_blank" rel="noreferrer">Contract on explorer</a></li>
               <li><a href={`${links.explorer}/address/0x456569838f1d43009A91ebA4263147Afd7233483`} target="_blank" rel="noreferrer">tUSD8 token</a></li>
               <li><a href={links.docs} target="_blank" rel="noreferrer">QDay docs</a></li>

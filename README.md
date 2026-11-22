@@ -21,6 +21,7 @@ Built on **QDay Aevum testnet** (chain `44005`) with **tUSD8** (6 decimals), for
 | Contract tests | `47 passed, 0 failed` (unit) + `2 passed` fork tests vs real tUSD8 |
 | Fork E2E | full loop verified on a local fork (deal → approve → create → pay → revoke) |
 | Live E2E | approve → createPolicy → agent spend → revoke → CLI fail-closed, all on chain 44005 |
+| Machine-readable proof | `/proof.json` (CORS-open deployment snapshot) and `/api/proof?tx=<hash>` (per-receipt proof export) |
 
 Screenshots in `public/screenshots/` (desk, policy, receipt, activity).
 
@@ -83,7 +84,7 @@ cli/                  @leash/cli — keygen / show / pay / activity
 packages/aevum/       chain config, tUSD8 ABI, getLogsChunked (≤1,000 blocks per call)
 packages/leash/       @leash/kit — Leash ABI, EIP-712 builders, policy bundle helpers
 examples/             runnable TypeScript: pay, read-spends, check-setup
-web/                  Next.js desk: overview, /new wizard, policy detail (revoke/limits/extend), /activity, /receipts/<tx>, /docs
+web/                  Next.js desk: overview, /new wizard, policy detail (terms, allowlist, spends), /activity, /receipts/<tx>, /docs, /proof.json
 docs/                 ARCHITECTURE, SECURITY, VERIFICATION, LIMITATIONS, DEMO, JUDGING (rubric traceability)
 ```
 

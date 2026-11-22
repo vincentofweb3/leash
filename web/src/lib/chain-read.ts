@@ -72,10 +72,27 @@ async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promis
  * One cached snapshot for the desk: exact policy totals from contract state, full Spent history
  * and policy #0. Cached per server instance for 45s; the API route adds a CDN cache on top.
  */
-export async function getOverview(): Promise<Overview> {
-  if (cache && Date.now() - cache.at < CACHE_MS) return cache.data;
-  if (inFlight) return inFlight;
-  inFlight = loadOverview().finally(() => {
+export async function getOverview(force = false): Promise<Overview> {
+  if (!force && cache) {
+    const ttl = cache.data.complete ? CACHE_MS : 5_000;
+    if (Date.now() - cache.at < ttl) return cache.data;
+    // Stale-while-revalidate: never block a page on a slow explorer refresh.
+    const stale = cache.data;
+    if (!inFlight) {
+      inFlight = loadOverview(false)
+        .then((data) => {
+          cache = { at: Date.now(), data };
+          return data;
+        })
+        .catch(() => stale)
+        .finally(() => {
+          inFlight = null;
+        });
+    }
+    return stale;
+  }
+  if (!force && inFlight) return inFlight;
+  inFlight = loadOverview(force).finally(() => {
     inFlight = null;
   });
   const data = await inFlight;
@@ -83,26 +100,37 @@ export async function getOverview(): Promise<Overview> {
   return data;
 }
 
-async function loadOverview(): Promise<Overview> {
+async function loadOverview(force: boolean): Promise<Overview> {
   const net = defaultNetwork;
   const chain = net.chain;
   const publicClient = client();
   const contract = net.leash ?? "0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f";
 
-  const [head, count, history] = await Promise.all([
+  const [head, count] = await Promise.all([
     publicClient.getBlockNumber(),
     publicClient.readContract({ address: contract, abi: leashAbi, functionName: "nextPolicyId" }),
-    getSpendHistory().catch(() => null),
   ]);
 
+  // Start policy reads and history together; the explorer must not serialize behind RPC.
+  const historyRequest = getSpendHistory(force).catch(() => null);
   const ids = Array.from({ length: Math.min(Number(count), MAX_POLICIES) }, (_, i) => BigInt(i));
-  const reads = await mapLimit(ids, 5, async (id) => {
+  const readsRequest = mapLimit(ids, 5, async (id) => {
     try {
       return await publicClient.readContract({ address: contract, abi: leashAbi, functionName: "policyOf", args: [id] });
     } catch {
       return null;
     }
   });
+  const [reads, history] = await Promise.all([
+    readsRequest,
+    // The desk gets a cold-start budget; proof/API callers use force and wait for the real history.
+    force
+      ? historyRequest
+      : Promise.race([
+          historyRequest,
+          new Promise<null>((resolve) => setTimeout(() => resolve(null), 6_000)),
+        ]),
+  ]);
   const loaded = reads.filter((p): p is NonNullable<typeof p> => p !== null);
   const settled = loaded.reduce((acc, p) => acc + p.spent, 0n);
   const now = BigInt(Math.floor(Date.now() / 1000));

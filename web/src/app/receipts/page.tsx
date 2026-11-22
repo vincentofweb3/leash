@@ -58,7 +58,10 @@ export default async function ReceiptsPage() {
         <div className="card">
           <div className="spread">
             <h2>Recent settlements</h2>
-            <Link className="btn ghost small" href="/activity">All activity</Link>
+            <div className="row" style={{ gap: 8 }}>
+              <a className="btn ghost small" href="/proof.json" target="_blank" rel="noreferrer">proof.json ↗</a>
+              <Link className="btn ghost small" href="/activity">All activity</Link>
+            </div>
           </div>
           {recent.length === 0 ? (
             <div className="empty">

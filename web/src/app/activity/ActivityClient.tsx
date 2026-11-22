@@ -7,14 +7,32 @@ import { formatUnits } from "viem";
 import { useToken } from "@/components/useToken";
 import { CopyButton } from "@/components/CopyButton";
 import { useNetwork } from "@/lib/network";
-import { fetchSpendHistory } from "@/lib/spends-client";
+import {
+  fetchSpendHistory,
+  spendHistoryFromJson,
+  type SpendHistoryJson,
+} from "@/lib/spends-client";
 import { short } from "@/lib/format";
-import { txUrl } from "@aevum-kit/aevum";
+import { links, txUrl } from "@aevum-kit/aevum";
 
-export function ActivityClient() {
+export function ActivityClient({
+  initial,
+  initialChainId,
+}: {
+  initial: SpendHistoryJson | null;
+  initialChainId?: number;
+}) {
   const { net } = useNetwork();
   const leash = net.leash;
   const token = useToken();
+
+  const initialData = useMemo(
+    () =>
+      initial && (initialChainId === undefined || initialChainId === net.chain.id)
+        ? spendHistoryFromJson(initial)
+        : undefined,
+    [initial, initialChainId, net.chain.id],
+  );
 
   const { data: spendHistory, error, isLoading, refetch } = useQuery({
     queryKey: ["activity-spends", net.chain.id, leash],
@@ -23,6 +41,9 @@ export function ActivityClient() {
       if (!leash) return null;
       return await fetchSpendHistory({});
     },
+    initialData,
+    initialDataUpdatedAt: initialData?.fetchedAt,
+    staleTime: 30_000,
     refetchInterval: false,
   });
 
@@ -79,7 +100,7 @@ export function ActivityClient() {
         </div>
       )}
 
-      {leash && (!spendHistory || spendHistory.spends.length === 0) && (
+      {leash && !isLoading && (!spendHistory || spendHistory.spends.length === 0) && (
         <div className="card">
           <div className="empty">
             <span className="empty-icon" aria-hidden="true">
@@ -139,7 +160,7 @@ export function ActivityClient() {
                         <td className="num">{r.block.toString()}</td>
                         <td className="num"><Link href={`/policy/${r.policyId}`}>#{r.policyId.toString()}</Link></td>
                         <td className="mono">
-                          <a href={`https://explorer-test.qday.info/address/${r.vendor}`} target="_blank" rel="noreferrer">{short(r.vendor)}</a>
+                          <a href={`${links.explorer}/address/${r.vendor}`} target="_blank" rel="noreferrer">{short(r.vendor)}</a>
                         </td>
                         <td className="right num strong">{formatUnits(r.amount, token.decimals)} {token.symbol}</td>
                         <td className="mono">
