@@ -101,6 +101,12 @@ export function ActivityClient({
       )}
 
       {leash && !isLoading && (!spendHistory || spendHistory.spends.length === 0) && (
+            <p className="fine" style={{ marginTop: 14 }}>
+              💡 <strong>Approve tUSD8</strong> to Leash to see your balance and set budgets.
+            </p>
+          )
+        )
+      )
         <div className="card">
           <div className="empty">
             <span className="empty-icon" aria-hidden="true">

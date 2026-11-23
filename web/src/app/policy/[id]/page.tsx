@@ -226,6 +226,7 @@ export default async function PolicyPage({ params }: { params: Promise<{ id: str
             <li><strong>setLimits()</strong> — lower the caps and budget.</li>
             <li><strong>extend()</strong> — move the expiry forward.</li>
             <li><strong>setAllowlist()</strong> — replace the vendor list.</li>
+            <li>💡 <strong>Approve tUSD8</strong> to Leash to see your balance and set budgets.</li>
           </ul>
           <p className="fine">
             The CLI and any wallet expose the same calls. See <Link href="/docs#contract">the contract API</Link> for the
