@@ -22,6 +22,7 @@ Built on **QDay Aevum testnet** (chain `44005`) with **tUSD8** (6 decimals), for
 | Fork E2E | full loop verified on a local fork (deal → approve → create → pay → revoke) |
 | Live E2E | approve → createPolicy → agent spend → revoke → CLI fail-closed, all on chain 44005 |
 | Machine-readable proof | `/proof.json` (CORS-open deployment snapshot) and `/api/proof?tx=<hash>` (per-receipt proof export) |
+| Live policy #2 | [two 0.05 tUSD8 spends](https://explorer-test.qday.info/tx/0xb3eaeee40297b519349bb758b3b5231abb072976bc1939dd8d418b3988195139) · [desk policy](https://leash-kohl.vercel.app/policy/2) · [proof.json](https://leash-kohl.vercel.app/proof.json) |
 
 Screenshots in `public/screenshots/` (desk, policy, receipt, activity).
 

@@ -64,3 +64,30 @@ forge script script/Deploy.s.sol --rpc-url https://rpc-test.qday.info \
 ```
 
 Every transaction above can be reproduced read-only with `cast receipt <hash> --rpc-url https://rpc-test.qday.info`.
+
+## Second live Aevum testnet run — 2026-11-22
+
+A fresh agent/vendor pair and a new policy, created and spent through the real CLI. This run also
+exercised the refusal path: an over-cap payment is rejected before anything is signed or sent.
+
+| Check | Value |
+| --- | --- |
+| Buyer / deployer | `0xBdfA76A871Fba289914f9e40a545BBceb30150C7` |
+| Agent key (new) | `0x70d155F47E5b37F6e3116C57643148166b025844` — funded 0.1 tQDAY, tx `0x367a37ced8fa43647ac60ce795489b0cfed035a2b1a054893f67da7149545117` (block 3863428) |
+| Vendor (new) | `0xf3F0E1F7C52e20f216f699412244Fc29251F6bC8` |
+| createPolicy(policyId 2) | tx `0xee207ad6f1125605fd443ae72cbfe02d5d15a06039ca4941a438af51301756e6` (block 3863431) — 0.3 tUSD8 budget, 0.1 per-tx cap, 0.2 daily cap, allowlist `[vendor]`, expiry +30d |
+| Spend 1 — 0.05 tUSD8 | tx `0xd580293e393f292553778ed32e63a120a3787df5b9e9a2c521aab1207aeb9b30` (block 3876545) |
+| Spend 2 — 0.05 tUSD8 | tx `0xb3eaeee40297b519349bb758b3b5231abb072976bc1939dd8d418b3988195139` (block 3876581) |
+| Over-cap attempt — 0.15 tUSD8 | **refused by the CLI before signing**: `amount exceeds the per-transaction cap (0.1 tUSD8)`. No transaction, no event. |
+| Policy 2 state after | spent 0.1 tUSD8, remaining 0.2 tUSD8, not revoked |
+| Vendor balance after | 0.1 tUSD8 |
+| Machine-readable proof | `/proof.json` → 3 Spent events, 0.6 tUSD8 settled, `source: explorer`, `complete: true` |
+
+Explorer: [policy 2 creation](https://explorer-test.qday.info/tx/0xee207ad6f1125605fd443ae72cbfe02d5d15a06039ca4941a438af51301756e6) ·
+[spend 1](https://explorer-test.qday.info/tx/0xd580293e393f292553778ed32e63a120a3787df5b9e9a2c521aab1207aeb9b30) ·
+[spend 2](https://explorer-test.qday.info/tx/0xb3eaeee40297b519349bb758b3b5231abb072976bc1939dd8d418b3988195139)
+
+Desk: [policy #2](https://leash-kohl.vercel.app/policy/2) · [spend 2 receipt](https://leash-kohl.vercel.app/receipts/0xb3eaeee40297b519349bb758b3b5231abb072976bc1939dd8d418b3988195139) · [proof.json](https://leash-kohl.vercel.app/proof.json)
+
+The agent key and bundle for this run live at `/tmp/leash-live/` on the build machine and are intentionally
+ephemeral; the onchain policy and spends remain verifiable without them.
