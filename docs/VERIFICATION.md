@@ -91,3 +91,20 @@ Desk: [policy #2](https://leash-kohl.vercel.app/policy/2) · [spend 2 receipt](h
 
 The agent key and bundle for this run live at `/tmp/leash-live/` on the build machine and are intentionally
 ephemeral; the onchain policy and spends remain verifiable without them.
+
+## User-run spend on policy #2 — 2026-11-24
+
+A third 0.05 tUSD8 spend was executed by the user through the CLI with the same demo agent key, bringing
+policy #2 to 0.15 tUSD8 spent (half of its 0.3 tUSD8 budget) and the testnet total to four Spent events.
+
+| Check | Value |
+| --- | --- |
+| Agent sender | `0x70d155F47E5b37F6e3116C57643148166b025844` |
+| Spend 3 — 0.05 tUSD8 | tx `0x67c592712f512823145357dd576b171c1c5686474fe2fb42fd8e2ccbee626825` (block 3899948) |
+| Policy 2 state after | spent 0.15 tUSD8, remaining 0.15 tUSD8, daily remaining 0.05 tUSD8, not revoked |
+| Vendor balance after | 0.15 tUSD8 |
+| Machine-readable proof | `/proof.json` → 4 Spent events, 0.65 tUSD8 settled, `source: explorer`, `complete: true` |
+
+Explorer: [spend 3](https://explorer-test.qday.info/tx/0x67c592712f512823145357dd576b171c1c5686474fe2fb42fd8e2ccbee626825)
+
+Desk: [policy #2](https://leash-kohl.vercel.app/policy/2) · [spend 3 receipt](https://leash-kohl.vercel.app/receipts/0x67c592712f512823145357dd576b171c1c5686474fe2fb42fd8e2ccbee626825) · [proof.json](https://leash-kohl.vercel.app/proof.json)
