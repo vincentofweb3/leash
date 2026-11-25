@@ -27,7 +27,7 @@ export default async function Home() {
           </h1>
           <p className="lede">
             Leash is the spend-allowance layer for AI agents. Set a per-transaction cap, a total budget, an optional
-            daily cap and a vendor allowlist onchain — then hand your agent a session key. It pays in tUSD8 inside the
+            daily cap and a vendor allowlist onchain - then hand your agent a session key. It pays in tUSD8 inside the
             limits you set, or not at all. Revoke the key in one transaction; unspent money never moves.
           </p>
           <div className="hero-actions">
@@ -97,7 +97,7 @@ export default async function Home() {
             <div>
               <h3>The missing middle: machine speed, human limits</h3>
               <p className="sub" style={{ marginBottom: 0 }}>
-                Leash enforces the policy in the settlement contract itself — not in the agent&apos;s prompt, not in a
+                Leash enforces the policy in the settlement contract itself - not in the agent&apos;s prompt, not in a
                 backend. The agent can pay without asking; the buyer keeps every control.
               </p>
             </div>
@@ -111,7 +111,7 @@ export default async function Home() {
           <div>
             <p className="eyebrow">How it works</p>
             <h2>Four steps, two signatures, one policy.</h2>
-            <p className="sub">The buyer signs twice. After that the agent pays within the policy — and anyone can verify every payment.</p>
+            <p className="sub">The buyer signs twice. After that the agent pays within the policy - and anyone can verify every payment.</p>
           </div>
           <a className="btn secondary small" href={repoUrl} target="_blank" rel="noreferrer">
             <GitHubIcon /> Source code
@@ -130,7 +130,7 @@ export default async function Home() {
               <span className="tl-num">02</span>
               <div className="tl-body">
                 <h3>Create the policy onchain</h3>
-                <p>Per-transaction cap, total budget, optional daily cap, vendor allowlist (≤ 16) and an expiry. The agent&apos;s session address goes in — your key never leaves your wallet.</p>
+                <p>Per-transaction cap, total budget, optional daily cap, vendor allowlist (≤ 16) and an expiry. The agent&apos;s session address goes in - your key never leaves your wallet.</p>
               </div>
             </div>
             <div className="tl-item">
@@ -144,7 +144,7 @@ export default async function Home() {
               <span className="tl-num">04</span>
               <div className="tl-body">
                 <h3>The contract enforces and settles</h3>
-                <p>Leash checks the signature, revocation, expiry, caps, daily limit and allowlist — then pulls tUSD8 from buyer to vendor and emits a typed <code>Spent</code> event.</p>
+                <p>Leash checks the signature, revocation, expiry, caps, daily limit and allowlist - then pulls tUSD8 from buyer to vendor and emits a typed <code>Spent</code> event.</p>
               </div>
             </div>
           </div>
@@ -238,7 +238,7 @@ remaining 0.50 tUSD8`}</pre>
             <div className="divider" style={{ margin: "16px 0" }} />
             <p className="fine">
               A stolen session key can spend at most the per-transaction cap × the remaining budget, only at allowed
-              vendors, only before expiry. That is the entire blast radius — and it is public.
+              vendors, only before expiry. That is the entire blast radius - and it is public.
             </p>
           </div>
         </div>
@@ -301,9 +301,9 @@ remaining 0.50 tUSD8`}</pre>
               <tr><td>Blast radius if the key leaks</td><td>the whole wallet</td><td>none</td><td><strong>per-tx cap × remaining budget</strong></td></tr>
               <tr><td>Vendor restrictions</td><td>none</td><td>per payment</td><td><strong>onchain allowlist</strong></td></tr>
               <tr><td>Daily pace</td><td>none</td><td>manual</td><td><strong>optional daily cap</strong></td></tr>
-              <tr><td>Revoke in one transaction</td><td>rotate everything</td><td>n/a</td><td><strong>yes — revoke()</strong></td></tr>
+              <tr><td>Revoke in one transaction</td><td>rotate everything</td><td>n/a</td><td><strong>yes - revoke()</strong></td></tr>
               <tr><td>Audit trail</td><td>wallet history</td><td>wallet history</td><td><strong>typed Spent events + purpose hashes</strong></td></tr>
-              <tr><td>Works with any agent framework</td><td>yes</td><td>no</td><td><strong>yes — CLI, SDK, or raw calldata</strong></td></tr>
+              <tr><td>Works with any agent framework</td><td>yes</td><td>no</td><td><strong>yes - CLI, SDK, or raw calldata</strong></td></tr>
             </tbody>
           </table>
         </div>
@@ -421,7 +421,7 @@ function PolicyPreview({ overview }: { overview: Overview | null }) {
           <div className="pcard-spend" style={{ background: "var(--surface-2)", borderColor: "var(--line)" }}>
             <span className="left">
               <span className="dot" aria-hidden="true" />
-              <span className="vendor">{tokenAmount(policy.spent)} tUSD8 settled — <Link href="/activity">view activity</Link></span>
+              <span className="vendor">{tokenAmount(policy.spent)} tUSD8 settled - <Link href="/activity">view activity</Link></span>
             </span>
           </div>
         ) : (
@@ -481,7 +481,7 @@ function Stats({ overview }: { overview: Overview | null }) {
                 : " · derived from public logs"}. {overview.complete ? "" : " · most recent 20,000 blocks only"}.
           </>
         ) : (
-          "RPC temporarily unavailable — the desk still reads onchain state directly."
+          "RPC temporarily unavailable - the desk still reads onchain state directly."
         )}
       </p>
     </div>

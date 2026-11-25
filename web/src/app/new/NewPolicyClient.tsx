@@ -259,7 +259,7 @@ export function NewPolicyClient() {
           <h1>Bound your agent&apos;s spend.</h1>
           <p className="lede">
             Three steps: point the policy at the agent, set the limits, sign. The agent gets a session key it can use
-            inside those limits — and nothing else.
+            inside those limits - and nothing else.
           </p>
         </div>
         <div className="page-actions">
@@ -285,7 +285,7 @@ export function NewPolicyClient() {
             <div className="card">
               <h2>Who is spending?</h2>
               <p className="sub">
-                The agent&apos;s <strong>session address</strong> — an EOA the agent controls. It can only sign spend
+                The agent&apos;s <strong>session address</strong> - an EOA the agent controls. It can only sign spend
                 authorizations; it cannot move tokens any other way. Your buyer wallet stays separate.
               </p>
               <label className="field">
@@ -313,7 +313,7 @@ export function NewPolicyClient() {
               </div>
               {devKey && (
                 <div className="notice warn" style={{ marginTop: 14 }}>
-                  <strong>Dev-mode session key — shown once, keep it safe.</strong>
+                  <strong>Dev-mode session key - shown once, keep it safe.</strong>
                   <code style={{ wordBreak: "break-all", fontSize: 12 }}>{devKey}</code>
                   <div className="row" style={{ gap: 8, marginTop: 4 }}>
                     <button className="btn ghost small" type="button" onClick={() => download("agent.key", `${devKey}\n`, "text/plain")}>
@@ -408,7 +408,7 @@ export function NewPolicyClient() {
               <p className="sub">
                 {needsApproval
                   ? `Two wallet transactions: approve exactly ${budgetDisplay} ${token.symbol}, then create the policy.`
-                  : `Your allowance is already at least ${budgetDisplay} ${token.symbol} — one transaction creates the policy.`}
+                  : `Your allowance is already at least ${budgetDisplay} ${token.symbol} - one transaction creates the policy.`}
               </p>
 
               <div className="detail-list">
@@ -452,7 +452,7 @@ export function NewPolicyClient() {
               {error && <div className="notice bad" style={{ marginTop: 16 }}>{error}</div>}
 
               <button className="btn big block" style={{ marginTop: 18 }} type="button" disabled={!ready} onClick={() => void createPolicy()}>
-                {phase === "approving" ? (<><span className="spinner" /> Approving budget…</>) : phase === "creating" ? (<><span className="spinner" /> Creating policy…</>) : (`Approve ${budgetDisplay} ${token.symbol} & create policy`)}
+                {phase === "approving" ? (<><span className="spinner" /> Approving budget…</>) : phase === "creating" ? (<><span className="spinner" /> Creating policy…</>) : needsApproval ? (`Approve ${budgetDisplay} ${token.symbol} & create policy`) : "Create policy"}
               </button>
               <p className="fine" style={{ marginTop: 10 }}>
                 You sign with your own wallet. Unspent {token.symbol} never leaves it, and you can zero the allowance at
@@ -516,7 +516,7 @@ function Success({ result, onReset }: { result: Result; onReset: () => void }) {
         </div>
         <h2>Hand this to your agent</h2>
         <p className="sub">
-          The bundle has no secrets. The session key does — powering the agent means giving <em>it</em> the key, never
+          The bundle has no secrets. The session key does - powering the agent means giving <em>it</em> the key, never
           this page.
         </p>
         <div className="row" style={{ gap: 10, marginBottom: 16 }}>

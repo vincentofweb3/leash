@@ -73,10 +73,10 @@ export default function DocsPage() {
             <p>
               Giving an agent a funded wallet means unbounded, unauditable spend. Asking a human to approve every
               payment kills the autonomy the agent exists for. Leash is the bounded middle: an onchain policy that
-              caps what an agent may spend, who it may pay, and for how long — enforced by the contract, not by the agent&apos;s good behavior.
+              caps what an agent may spend, who it may pay, and for how long - enforced by the contract, not by the agent&apos;s good behavior.
             </p>
             <p>
-              The buyer approves Leash for exactly the budget. The agent holds a <em>session key</em> — an EOA that
+              The buyer approves Leash for exactly the budget. The agent holds a <em>session key</em> - an EOA that
               can only sign <code>SpendAuth</code> messages. Leash verifies the signature and every limit onchain, then
               executes <code>transferFrom(buyer → vendor)</code> against that allowance. The contract never takes custody,
               has no owner, no upgrade path and no pause switch.
@@ -98,10 +98,10 @@ leash pay --bundle bundle.json \\
     --vendor 0xVendor --amount 12.50 \\
     --purpose "invoice #1042"     # signs SpendAuth, submits spend()`}</Code>
             <ol>
-              <li><strong>Buyer</strong> connects the desk, pastes the agent&apos;s session address, sets per-tx cap, budget, daily cap, allowlist, expiry — approves the exact budget, then <code>createPolicy</code>.</li>
+              <li><strong>Buyer</strong> connects the desk, pastes the agent&apos;s session address, sets per-tx cap, budget, daily cap, allowlist, expiry - approves the exact budget, then <code>createPolicy</code>.</li>
               <li><strong>Buyer</strong> downloads the bundle JSON (no secrets inside) and hands it to the agent operator.</li>
-              <li><strong>Agent</strong> signs one EIP-712 <code>SpendAuth</code> per purchase and submits it. Anyone may relay it — only the agent&apos;s signature authorizes movement.</li>
-              <li><strong>Contract</strong> checks: policy active, not expired, nonce unused, per-tx cap, remaining budget, daily cap, allowlist — then pulls tUSD8 buyer → vendor and emits <code>Spent</code>.</li>
+              <li><strong>Agent</strong> signs one EIP-712 <code>SpendAuth</code> per purchase and submits it. Anyone may relay it - only the agent&apos;s signature authorizes movement.</li>
+              <li><strong>Contract</strong> checks: policy active, not expired, nonce unused, per-tx cap, remaining budget, daily cap, allowlist - then pulls tUSD8 buyer → vendor and emits <code>Spent</code>.</li>
               <li><strong>Anyone</strong> can audit: <code>/activity</code> lists the events; <code>/receipts/&lt;tx&gt;</code> re-derives them from the receipt; the explorer links every row.</li>
             </ol>
           </section>
@@ -118,7 +118,7 @@ leash pay --bundle bundle.json \\
                 <tr><td className="mono">extend(policyId, expiry)</td><td>buyer</td><td>Push the expiry forward; never shorten it</td></tr>
                 <tr><td className="mono">setAllowlist(policyId, allowlist)</td><td>buyer</td><td>Replace the vendor list; empty = any vendor</td></tr>
                 <tr><td className="mono">policyOf / remainingBudget / todaySpent / allowlistOf</td><td>view</td><td>State reads for UIs and agents</td></tr>
-                <tr><td className="mono">hashSpendAuth(auth)</td><td>view</td><td>The EIP-712 digest — what the agent actually signs</td></tr>
+                <tr><td className="mono">hashSpendAuth(auth)</td><td>view</td><td>The EIP-712 digest - what the agent actually signs</td></tr>
               </tbody>
             </table>
           </section>
@@ -130,12 +130,12 @@ leash pay --bundle bundle.json \\
   address agent,        // must equal policy.agent
   address vendor,       // the payee
   uint256 amount,       // base units, tUSD8 = 6 decimals
-  bytes32 purposeHash,  // keccak256(utf8(purpose)) — text stays offchain
+  bytes32 purposeHash,  // keccak256(utf8(purpose)) - text stays offchain
   bytes32 nonce,        // random, single-use per policy
   uint64 expiresAt      // short-lived: minutes, not days
 )
 // EIP-712 domain: name "Leash", version "1", chainId, verifyingContract`}</Code>
-            <p className="fine">The nonce is scoped per policy — the same nonce may be reused across policies, never twice within one.</p>
+            <p className="fine">The nonce is scoped per policy - the same nonce may be reused across policies, never twice within one.</p>
           </section>
 
           <section id="quickstart">
@@ -181,10 +181,10 @@ const signature = await account.signTypedData(spendAuthTypedData(44005, LEASH, a
               <li><strong>No custody.</strong> Leash pulls tUSD8 via your ERC-20 allowance at spend time. Unspent money never enters the contract, and there is no rescue path.</li>
               <li><strong>Kill switch.</strong> <code>revoke()</code> is final per policy; mint a fresh policy for a new session key. Your tUSD8 approve(0) stops even the contract itself.</li>
               <li><strong>Least privilege.</strong> Session keys only sign <code>SpendAuth</code>. They cannot approve, transfer to themselves, or create policies.</li>
-              <li><strong>Replay protection.</strong> Per-policy <code>usedNonce</code>. The EIP-712 domain binds chainId and the verifying contract — no cross-chain or cross-contract replay.</li>
+              <li><strong>Replay protection.</strong> Per-policy <code>usedNonce</code>. The EIP-712 domain binds chainId and the verifying contract - no cross-chain or cross-contract replay.</li>
               <li><strong>Blast radius.</strong> A stolen session key drains at most <em>per-tx cap per spend and the remaining budget, within the allowlist, until expiry</em>.</li>
               <li><strong>No admin.</strong> No owner, pause, upgrade or fee. The buyer is the only privileged actor, and only over their own policy.</li>
-              <li><strong>Prompt injection.</strong> Worst case: a capped, allowlisted, expiring, fully logged payment — still bounded by the policy you signed.</li>
+              <li><strong>Prompt injection.</strong> Worst case: a capped, allowlisted, expiring, fully logged payment - still bounded by the policy you signed.</li>
             </ul>
           </section>
 
@@ -221,7 +221,7 @@ const signature = await account.signTypedData(spendAuthTypedData(44005, LEASH, a
               at <code>/api/proof?tx=&lt;hash&gt;</code>.
             </p>
             <p className="fine">
-              Reverted transactions cannot be replayed as receipts — they leave no <code>Spent</code> event, which is exactly
+              Reverted transactions cannot be replayed as receipts - they leave no <code>Spent</code> event, which is exactly
               the point. The depth of a refusal is <code>eth_call</code> away: simulate the same spend and read the revert.
             </p>
           </section>
@@ -253,19 +253,19 @@ const signature = await account.signTypedData(spendAuthTypedData(44005, LEASH, a
           <section id="roadmap">
             <h2>Roadmap</h2>
             <ol>
-              <li><strong>ERC-4337 smart accounts (Kernel v3.1)</strong> — Aevum already runs a Kernel v3.1 fork and ERC-4337 bundlers (rundler, alto); session keys as Kernel validators remove the standalone session EOA entirely, and give gasless agent spends via a paymaster (<a href="https://github.com/qday-io/kernel" target="_blank" rel="noreferrer">qday-io/kernel</a>, <a href="https://github.com/qday-io/qday-bundler" target="_blank" rel="noreferrer">qday-io/qday-bundler</a>).</li>
-              <li><strong>Human-escalation queue</strong> — over-cap requests pause for buyer approval instead of reverting, reusing the desk.</li>
+              <li><strong>ERC-4337 smart accounts (Kernel v3.1)</strong> - Aevum already runs a Kernel v3.1 fork and ERC-4337 bundlers (rundler, alto); session keys as Kernel validators remove the standalone session EOA entirely, and give gasless agent spends via a paymaster (<a href="https://github.com/qday-io/kernel" target="_blank" rel="noreferrer">qday-io/kernel</a>, <a href="https://github.com/qday-io/qday-bundler" target="_blank" rel="noreferrer">qday-io/qday-bundler</a>).</li>
+              <li><strong>Human-escalation queue</strong> - over-cap requests pause for buyer approval instead of reverting, reusing the desk.</li>
               <li><strong>EIP-3009 gasless merchant payouts</strong> — the vendor receives tUSD8 without the buyer holding tQDAY.</li>
-              <li><strong>Purpose allowlists</strong> — restrict not only <em>where</em> the agent pays, but <em>what for</em>.</li>
+              <li><strong>Purpose allowlists</strong> - restrict not only <em>where</em> the agent pays, but <em>what for</em>.</li>
             </ol>
           </section>
 
           <section id="faq">
             <h2>FAQ</h2>
             <p><strong>Does the buyer need tQDAY?</strong> Yes, for approve/create/revoke transactions. The agent pays gas for <code>spend</code> calls (~1 gwei each).</p>
-            <p><strong>Can the agent pay itself?</strong> Only if the agent address is on the allowlist, for up to the remaining budget, before expiry — which the buyer chose.</p>
+            <p><strong>Can the agent pay itself?</strong> Only if the agent address is on the allowlist, for up to the remaining budget, before expiry - which the buyer chose.</p>
             <p><strong>What if the RPC is down?</strong> The CLI refuses to sign blind; the desk shows stale-state errors instead of failing silently.</p>
-            <p><strong>How do I verify a payment?</strong> <code>/receipts/&lt;txHash&gt;</code> re-reads the receipt and lists the Spent events — or check the explorer directly.</p>
+            <p><strong>How do I verify a payment?</strong> <code>/receipts/&lt;txHash&gt;</code> re-reads the receipt and lists the Spent events - or check the explorer directly.</p>
             <p><strong>Where do I get tUSD8?</strong> Discord <code>/faucet</code> (react ✅ in <code>#verify</code> first) or <a href={links.faucetWeb} target="_blank" rel="noreferrer">faucet.qday.info</a>.</p>
           </section>
         </article>

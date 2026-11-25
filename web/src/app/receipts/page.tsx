@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Receipt verifier",
-  description: "Paste any Leash transaction hash and verify the spend straight from the chain receipt — no backend required.",
+  description: "Paste any Leash transaction hash and verify the spend straight from the chain receipt - no backend required.",
 };
 
 export default async function ReceiptsPage() {
@@ -28,7 +28,7 @@ export default async function ReceiptsPage() {
           <h1>Proof of settlement.</h1>
           <p className="lede">
             Paste any Leash transaction hash. This page re-reads the transaction receipt from {overview?.chainName ?? "QDay Aevum"} and
-            derives the <span className="mono">Spent</span> event itself — no database, no trust in us.
+            derives the <span className="mono">Spent</span> event itself - no database, no trust in us.
           </p>
         </div>
       </div>
@@ -38,7 +38,7 @@ export default async function ReceiptsPage() {
         <VerifyForm />
         <p className="fine" style={{ marginTop: 10 }}>
           The verifier works for any transaction on the selected network. A valid transaction that did not emit a Leash
-          event is not a receipt — it will say so plainly.
+          event is not a receipt - it will say so plainly.
         </p>
       </div>
 

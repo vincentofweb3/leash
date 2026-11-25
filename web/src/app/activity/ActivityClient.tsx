@@ -101,22 +101,21 @@ export function ActivityClient({
       )}
 
       {leash && !isLoading && (!spendHistory || spendHistory.spends.length === 0) && (
-            <p className="fine" style={{ marginTop: 14 }}>
-              💡 <strong>Approve tUSD8</strong> to Leash to see your balance and set budgets.
-            </p>
-          )
-        )
-      )
-        <div className="card">
-          <div className="empty">
-            <span className="empty-icon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="8" /><path d="M12 8v4l3 2" /></svg>
-            </span>
-            <strong>No spends recorded.</strong>
-            <p className="fine">Create a policy and pay it with the CLI.</p>
-            <Link href="/new" className="btn ghost small" style={{ marginTop: 6 }}>Create a policy</Link>
+        <>
+          <p className="fine" style={{ marginTop: 14 }}>
+            💡 <strong>Approve tUSD8</strong> to Leash to see your balance and set budgets.
+          </p>
+          <div className="card">
+            <div className="empty">
+              <span className="empty-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="8" /><path d="M12 8v4l3 2" /></svg>
+              </span>
+              <strong>No spends recorded.</strong>
+              <p className="fine">Create a policy and pay it with the CLI.</p>
+              <Link href="/new" className="btn ghost small" style={{ marginTop: 6 }}>Create a policy</Link>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {leash && spendHistory && (
