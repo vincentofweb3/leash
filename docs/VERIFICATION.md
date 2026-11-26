@@ -108,3 +108,27 @@ policy #2 to 0.15 tUSD8 spent (half of its 0.3 tUSD8 budget) and the testnet tot
 Explorer: [spend 3](https://explorer-test.qday.info/tx/0x67c592712f512823145357dd576b171c1c5686474fe2fb42fd8e2ccbee626825)
 
 Desk: [policy #2](https://leash-kohl.vercel.app/policy/2) · [spend 3 receipt](https://leash-kohl.vercel.app/receipts/0x67c592712f512823145357dd576b171c1c5686474fe2fb42fd8e2ccbee626825) · [proof.json](https://leash-kohl.vercel.app/proof.json)
+
+## Final recorded demo run — 2026-11-25
+
+The buyer wallet for the recorded demo is `0x6f9001a2888D3109d9A6f89794ac95F270342B37`
+(1 tUSD8, 3 tQDAY). The first take created Policy #3; it remains unused. The final take created Policy #4
+with a fresh session key and executed one 0.05 tUSD8 spend against the allowlisted vendor.
+
+| Check | Value |
+| --- | --- |
+| Buyer wallet | `0x6f9001a2888D3109d9A6f89794ac95F270342B37` |
+| Final agent key | `0x2070a28076C698B832174c8415D1B05c5bAE1509` — funded 0.02 tQDAY, tx `0xa0873b888a0f82d864f95b59132ca9f8cf394f0fa4d8c6e9b24860816ecee4c8` (block 4127075) |
+| Vendor | `0xf3F0E1F7C52e20f216f699412244Fc29251F6bC8` |
+| Policy 3 create (first take, unused) | tx `0xf0e82f1c8805c22a58ec8dff4709deb457c525db4a28a5a821f6518406a96ad9` (block 4126218) |
+| Policy 4 create | tx `0x666d8e653ef882569c507a4115545d9cb0c04bed194bdce7d884f6d47d46b15e` (block 4127455) — 0.1 tUSD8 budget, 0.05 per-tx cap, 0.1 daily cap, allowlist `[vendor]`, expiry +30d |
+| Policy 4 spend — 0.05 tUSD8 | tx `0xceab37bde2e88105ca46aa4641e9457e15026adcd17dc69d016354108c6e08f9` (block 4127507) |
+| Policy 4 state after | spent 0.05 tUSD8, remaining 0.05 tUSD8, not revoked |
+| Buyer state after | 0.95 tUSD8, 0.05 tUSD8 allowance to Leash |
+| Testnet totals | 5 policies created (4 active, 1 revoked), 5 Spent events, 0.7 tUSD8 settled, 2 vendors |
+| Machine-readable proof | `/proof.json` → 5 Spent events, 0.7 tUSD8 settled, `source: explorer`, `complete: true` |
+
+Explorer: [policy 4 create](https://explorer-test.qday.info/tx/0x666d8e653ef882569c507a4115545d9cb0c04bed194bdce7d884f6d47d46b15e) ·
+[policy 4 spend](https://explorer-test.qday.info/tx/0xceab37bde2e88105ca46aa4641e9457e15026adcd17dc69d016354108c6e08f9)
+
+Desk: [policy #4](https://leash-kohl.vercel.app/policy/4) · [spend receipt](https://leash-kohl.vercel.app/receipts/0xceab37bde2e88105ca46aa4641e9457e15026adcd17dc69d016354108c6e08f9) · [proof.json](https://leash-kohl.vercel.app/proof.json) · [demo video](https://youtu.be/AAWlbKBwx_w)

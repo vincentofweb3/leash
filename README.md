@@ -17,12 +17,12 @@ Built on **QDay Aevum testnet** (chain `44005`) with **tUSD8** (6 decimals), for
 | Public repo | https://github.com/vincentofweb3/leash |
 | Live app | https://leash-kohl.vercel.app |
 | Aevum testnet contract | [`0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f`](https://explorer-test.qday.info/address/0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f) (block 3440063) |
-| Testnet txs | [deploy](https://explorer-test.qday.info/tx/0xff4a4ca749f140de20b2cb29acebcf3f5b5028abc9257f48c79456b02c5d2c8b) · [spend 0.5](https://explorer-test.qday.info/tx/0x61a63983290fea87134c012fc8aeece611b2b7d79453a8ed101c9c621d4aa5fe) · [revoke](https://explorer-test.qday.info/tx/0x1789dd88e5f010575be5df6ed494d377777419148bfaed0a0eb8d5cd1f4b0df0) — full set in `docs/VERIFICATION.md` |
+| Testnet txs | [deploy](https://explorer-test.qday.info/tx/0xff4a4ca749f140de20b2cb29acebcf3f5b5028abc9257f48c79456b02c5d2c8b) · [spend 0.5](https://explorer-test.qday.info/tx/0x61a63983290fea87134c012fc8aeece611b2b7d79453a8ed101c9c621d4aa5fe) · [revoke](https://explorer-test.qday.info/tx/0x1789dd88e5f010575be5df6ed494d377777419148bfaed0a0eb8d5cd1f4b0df0) · [final demo create](https://explorer-test.qday.info/tx/0x666d8e653ef882569c507a4115545d9cb0c04bed194bdce7d884f6d47d46b15e) · [final demo spend](https://explorer-test.qday.info/tx/0xceab37bde2e88105ca46aa4641e9457e15026adcd17dc69d016354108c6e08f9) — full set in `docs/VERIFICATION.md` |
 | Contract tests | `47 passed, 0 failed` (unit) + `2 passed` fork tests vs real tUSD8 |
 | Fork E2E | full loop verified on a local fork (deal → approve → create → pay → revoke) |
-| Live E2E | approve → createPolicy → agent spend → revoke → CLI fail-closed, all on chain 44005 |
+| Live E2E | 5 policies, 4 active + 1 revoked, 5 settled spends, 0.7 tUSD8, 2 vendors; approve → createPolicy → agent spend → revoke → CLI fail-closed on chain 44005 |
 | Machine-readable proof | `/proof.json` (CORS-open deployment snapshot) and `/api/proof?tx=<hash>` (per-receipt proof export) |
-| Live policy #2 | three 0.05 tUSD8 spends (0.15 of 0.3 budget) · [desk policy](https://leash-kohl.vercel.app/policy/2) · [proof.json](https://leash-kohl.vercel.app/proof.json) |
+| Live demo policy | [Policy #4](https://leash-kohl.vercel.app/policy/4) — 0.05 of 0.1 tUSD8 spent · [receipt](https://leash-kohl.vercel.app/receipts/0xceab37bde2e88105ca46aa4641e9457e15026adcd17dc69d016354108c6e08f9) · [proof.json](https://leash-kohl.vercel.app/proof.json) |
 
 ## What it is
 

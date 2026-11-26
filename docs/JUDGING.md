@@ -18,6 +18,6 @@ Rubric source: starter kit §6 Competition Rules + challenge page §Judging crit
 
 - **279 competing builders**; judging is comparative and unknowable here — no weights are inferable beyond the published rubric.
 - **No third-party audit**; security rests on tests, minimal design, and OpenZeppelin primitives.
-- **Live testnet evidence pending** at time of writing (see VERIFICATION.md) — the submission must not be sent before those hashes exist.
+- **Live testnet evidence is complete**: contract `0xdec9195d6f321b9e078b0d70a8fe15dea2e99a7f` deployed at block 3440063; 5 policies (4 active, 1 revoked); 5 `Spent` events totalling 0.7 tUSD8 across 2 vendors; live receipt and refusal proof. See `docs/VERIFICATION.md` and `/proof.json`.
 - **Innovation differentiation** depends on what the field submits; can't be verified until judging.
 - Demo Day is a live video call; DEMO.md preflight must be run fresh on the judging day.
